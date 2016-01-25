@@ -81,6 +81,10 @@ function ( appGenHtml, qvangular, $, RPCSession ) {
         ref: "qDef.limit",
         show: true
       };
+			if(!session){
+				session = $scope.backendApi.model.session;
+				handle = session.currentApp.handle;
+			}
 			$scope.createApp = function(){
 				$scope.view = "processing";
 				$scope.errorCount = 0;
@@ -334,6 +338,14 @@ function ( appGenHtml, qvangular, $, RPCSession ) {
 					});
 				});
 			}
+			$scope.getFieldValues = function(fieldDef, callbackFn){
+				$scope.createSessionObject(fieldDef, function(createObjectResponse){
+					//use the handle of the new object to get the Values
+					$scope.getLayout(createObjectResponse.result.qReturn.qHandle, function(objectLayout){
+						callbackFn.call(null, objectLayout);
+					});
+				});
+			}
 			$scope.reload = function(){
 				$scope.logProgress("Reloading App");
 				newAppSession.rpc({handle: newAppHandle, method: "DoReload", params: []}).then(function(reloadStart){
@@ -379,12 +391,52 @@ function ( appGenHtml, qvangular, $, RPCSession ) {
 					newAppSession.close();
 				});
 			}
+			$scope.createSessionObject = function(objectDef, callbackFn){
+				session.rpc({handle: handle, method: "CreateSessionObject", params: [objectDef]}).then(function(createObjectResponse){
+					if(createObjectResponse.error){
+						$scope.logError(createObjectResponse.error);
+					}
+					callbackFn.call(null, createObjectResponse);
+				}, function(error){
+					$scope.logError(error);
+				});
+			}
+			$scope.getListObjectData = function(listHandle, pageArray, callbackFn){
+				session.rpc({handle: listHandle, method: "SelectListObjectValues", params: ["/qListObjectDef", pageArray]}).then(function(getDataResponse){
+					if(getDataResponse.error){
+						$scope.logError(getDataResponse.error);
+					}
+					callbackFn.call(null, getDataResponse);
+				}, function(error){
+					$scope.logError(error);
+				});
+			}
+			$scope.selectListObjectValues = function(listHandle, enumArray, callbackFn){
+				session.rpc({handle: listHandle, method: "SelectListObjectValues", params: ["/qListObjectDef", enumArray]}).then(function(selectValuesResponse){
+					if(selectValuesResponse.error){
+						$scope.logError(selectValuesResponse.error);
+					}
+					callbackFn.call(null, selectValuesResponse);
+				}, function(error){
+					$scope.logError(error);
+				});
+			}
 			$scope.getObject = function(docHandle, id, callbackFn){
 				session.rpc({handle: docHandle, method: "GetObject", params: [id]}).then(function(getObjectResponse){
 					if(getObjectResponse.error){
 						$scope.logError(getObjectResponse.error);
 					}
 					callbackFn.call(null, getObjectResponse);
+				}, function(error){
+					$scope.logError(error);
+				});
+			}
+			$scope.getField = function(fieldName, callbackFn){
+				session.rpc({handle: handle, method: "GetField", params: [fieldName]}).then(function(getFieldResponse){
+					if(getFieldResponse.error){
+						$scope.logError(getFieldResponse.error);
+					}
+					callbackFn.call(null, getFieldResponse);
 				}, function(error){
 					$scope.logError(error);
 				});
