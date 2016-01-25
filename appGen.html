@@ -1,0 +1,48 @@
+<div class="odag-main">
+  <h1>On-demand App Generation</h1>
+  <div class="odag-no-condition" ng-show="view=='nocondition'">
+    <h2>Condition Required</h2>
+    <p ng-hide="expressionSet">
+      In order to generate an app you must create a condition to monitor the number of rows.
+    </p>
+    <p>
+      Please specifiy a row limit.
+    </p>
+  </div>
+  <div class="odag-condition-not-met" ng-show="view=='conditionnotmet'">
+    <p>
+      Please filter your data until there are no more than {{limit}} rows.
+    </p>
+    <p>
+      Current row count - {{rowCount}}
+    </p>
+  </div>
+  <div class="odag-ready" ng-show="view=='ready'">
+    {{rowCount}} rows available
+    <button class="qui-button-light" ng-click="createApp()" type="button" name="button">Create App</button>
+  </div>
+  <div class="odag-progress" ng-show="view=='processing'">
+    <h1>Progress</h1>
+    <p>
+      {{progress}}
+    </p>
+  </div>
+  <div class="odag-done" ng-show="view=='done'">
+    <p>
+      App Successfully Created
+    </p>
+    <button class="qui-button-light" ng-click="openNewApp()" type="button" name="button">Open App</button>
+  </div>
+  <div class="odag-error" ng-show="view=='error'">
+    <h2>Could not complete action</h2>
+    <h3>Action</h3>
+    <p>
+
+    </p>
+    <h3>Error</h3>
+    <p>
+      {{lastError}}
+    </p>
+    <button class="qui-button-light" ng-click="acknowledgeError()" type="button" name="button">OK</button>
+  </div>
+</div>
