@@ -1,5 +1,5 @@
 # on-demand-app-gen
-*A simple On-demand app generation extension for Qlik Sense*
+*A simple On-demand app generation extension for Qlik Sense (requires Qlik Sense Enterprise)*
 
 This extension allows you to make selections in a Qlik Sense app and then clone it, using the selections to modify the script and reduce the data. Currently the app only copies sheets, objects and the script.
 
